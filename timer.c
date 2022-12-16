@@ -30,6 +30,7 @@
 
 timerCallback timer1Callback; //allocate global callback pointer
 
+uint8_t ledState =0;
 volatile uint16_t total_units_timer1;  //currently the size of this variable is the limit for counting time units
 uint16_t targetTime_timer1;
 
@@ -103,11 +104,21 @@ void stopTimer1() {
 }
 void setTimer1Callback(timerCallback ptr_func) {
 	timer1Callback = ptr_func;
+    DDRD |=  _BV(0);  // PORTD7 is output for sign of life
 }
 
 ISR(TIMER1_COMPA_vect) {
 	//timer is cleared on compare
 	total_units_timer1++;  //increment the counted time units
+
+    ///toggle led state for sign of life    
+    if(ledState == 0){
+    PORTD |=  _BV(7);       // LED on
+    ledState = 1;
+    } else {
+    PORTD &= ~_BV(7);       // LED off
+    ledState = 0;
+    }
 
 	if (total_units_timer1 == targetTime_timer1) {
 		total_units_timer1 = 0;

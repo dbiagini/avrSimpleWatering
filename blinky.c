@@ -33,23 +33,10 @@ int main(void) {
 *
 */
 timerCallback ptr_myCallback;
-uint8_t ledState =0;
-void myTimer1Callback() {
-    
-    /*if(ledState == 0){
-    PORTD |=  _BV(7);       // LED on
-    PORTC |=  _BV(0);       // LED on
-    ledState = 1;
-    } else {
-    PORTD &= ~_BV(7);       // LED off
-    PORTC &= ~_BV(0);       // LED off
-    ledState = 0;
-    }*/
 
-    PORTD |=  _BV(7);       // LED on
+void myTimer1Callback() {
     PORTC |=  _BV(0);       // LED on
     _delay_ms(TIME_watering_ms);
-    PORTD &= ~_BV(7);       // LED off
     PORTC &= ~_BV(0);       // LED off
     
     return;
@@ -59,22 +46,23 @@ int main(){
 	
 	//testing the Timer functionality (polling) in seconds and milliseconds//
 	// Set timer to use function timerFunc
-	uint16_t previous = 0;
     ptr_myCallback = &myTimer1Callback;
 
-    DDRD |=  _BV(0);  // PORTB0 is output
 	
-    DDRC |=  _BV(0);  // PORTB0 is output
+    DDRC |=  _BV(0);  // RElay is output
     setTimer1Callback(ptr_myCallback);
-    setTimer1_s(TIME_Interval_s); ///set time limit and start timer
-
+    setTimer1_s(TIME_Interval_s); ///set time limit and start time
     startTimer1_s();
+
+   ///testing purpose//
+    //setTimer1_ms(TIME_Interval_s); ///set time limit and start timer
+    //startTimer1_ms();
+   
     sei();
-	uint16_t limit = 10;        
-    PORTD |=  _BV(7);       // LED on
+    /*PORTD |=  _BV(7);       // LED on
 	_delay_ms(500);
     PORTD &= ~_BV(7);       // LED off
-	_delay_ms(500);
+	_delay_ms(500);*/
     
 	while(1)
 	{
