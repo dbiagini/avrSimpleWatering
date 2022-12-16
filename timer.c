@@ -79,7 +79,7 @@ void startTimer1_ms() {
 	TIMSK |= (1 << OCIE1A);
 }
 
-void setTimer_1ms(uint16_t in_time) {
+void setTimer1_ms(uint16_t in_time) {
 	targetTime_timer1 = in_time;
     return;
 }
