@@ -13,7 +13,8 @@
 #include <avr/interrupt.h>
 #include "./timer.h"
 
-
+#define TIME_Interval_s 43200
+#define TIME_watering_ms 5000
 /*
 int main(void) {
   long a;
@@ -35,13 +36,22 @@ timerCallback ptr_myCallback;
 uint8_t ledState =0;
 void myTimer1Callback() {
     
-    if(ledState == 0){
+    /*if(ledState == 0){
     PORTD |=  _BV(7);       // LED on
+    PORTC |=  _BV(0);       // LED on
     ledState = 1;
     } else {
     PORTD &= ~_BV(7);       // LED off
+    PORTC &= ~_BV(0);       // LED off
     ledState = 0;
-    }
+    }*/
+
+    PORTD |=  _BV(7);       // LED on
+    PORTC |=  _BV(0);       // LED on
+    _delay_ms(TIME_watering_ms);
+    PORTD &= ~_BV(7);       // LED off
+    PORTC &= ~_BV(0);       // LED off
+    
     return;
 }
 
@@ -53,8 +63,10 @@ int main(){
     ptr_myCallback = &myTimer1Callback;
 
     DDRD |=  _BV(0);  // PORTB0 is output
-	setTimer1Callback(ptr_myCallback);
-    setTimer1_s(5); ///set time limit and start timer
+	
+    DDRC |=  _BV(0);  // PORTB0 is output
+    setTimer1Callback(ptr_myCallback);
+    setTimer1_s(TIME_Interval_s); ///set time limit and start timer
 
     startTimer1_s();
     sei();
