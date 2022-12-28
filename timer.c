@@ -32,7 +32,7 @@ timerCallback timer1Callback; //allocate global callback pointer
 
 uint8_t ledState =0;
 volatile uint16_t total_units_timer1;  //currently the size of this variable is the limit for counting time units
-uint16_t targetTime_timer1;
+volatile uint16_t targetTime_timer1;
 
 void startTimer1_s() {
 	// start timer with interrupt every second.
@@ -81,11 +81,15 @@ void startTimer1_ms() {
 }
 
 void setTimer1_ms(uint16_t in_time) {
-	targetTime_timer1 = in_time;
+    ATOMIC_BLOCK(ATOMIC_FORCEON) {
+        targetTime_timer1 = in_time;
+     }
     return;
 }
 void setTimer1_s(uint16_t in_time) {
-	targetTime_timer1 = in_time;
+    ATOMIC_BLOCK(ATOMIC_FORCEON) {
+        targetTime_timer1 = in_time;
+    }
     return;
 }
 uint16_t getTimer1(){	

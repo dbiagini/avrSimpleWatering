@@ -13,8 +13,9 @@
 #include <avr/interrupt.h>
 #include "./timer.h"
 
-#define TIME_Interval_s 43200
+#define TIME_Interval_s 64800  //18 hours 
 #define TIME_watering_ms 5000
+#define TIME_watering_s 5
 /*
 int main(void) {
   long a;
@@ -33,11 +34,19 @@ int main(void) {
 *
 */
 timerCallback ptr_myCallback;
+uint8_t pinStatus = 0;
 
 void myTimer1Callback() {
-    PORTC |=  _BV(0);       // LED on
-    _delay_ms(TIME_watering_ms);
-    PORTC &= ~_BV(0);       // LED off
+    if(!pinStatus){
+        PORTC |=  _BV(0);       // pump on
+        pinStatus = 1;
+        setTimer1_s(TIME_watering_s); ///set time limit watering and start time
+        //_delay_ms(TIME_watering_ms);
+    } else {    
+        PORTC &= ~_BV(0);       // pump off
+        pinStatus = 0;
+        setTimer1_s(TIME_Interval_s); ///reset timer limit for longer wait
+    }
     
     return;
 }
